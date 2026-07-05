@@ -50,7 +50,9 @@ cp -r bazi-roundtable your-project/.claude/skills/
 
 ### claude.ai
 
-将 `bazi-roundtable/` 目录打包上传为 skill（Settings → Capabilities → Skills）。
+从 [Releases 页面](https://github.com/yanouyuan-bit/bazi-roundtable/releases/latest)下载 **`bazi-roundtable.zip`**，在 Settings → Capabilities → Skills 直接上传即可。
+
+这个 zip 已按 skill 上传规范打包：`SKILL.md` 位于压缩包根部、路径用标准正斜杠、含合规 YAML frontmatter。**注意别用 GitHub 自动生成的 "Source code (zip)"**——那个会多套一层目录、把 SKILL.md 埋进子目录，上传会校验失败。
 
 ## 使用
 
