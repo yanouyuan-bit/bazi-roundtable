@@ -1,0 +1,4 @@
+# skill 源文件强制 LF：zip 由这些文件直接打包，CI 在 Linux 上逐字节比对，
+# 换行符必须与检出结果一致（Windows 上生成文件时的 CRLF 会导致 CI 失败）
+bazi-roundtable/** text eol=lf
+*.zip binary
