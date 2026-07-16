@@ -54,7 +54,20 @@ cp -r bazi-roundtable your-project/.claude/skills/
 
 这个 zip 已按 skill 上传规范打包：`SKILL.md` 位于压缩包根部、路径用标准正斜杠、含合规 YAML frontmatter，下载即用。**注意别用 GitHub 自动生成的 "Source code (zip)"**——那个会多套一层目录、把 SKILL.md 埋进子目录，上传会校验失败。
 
-> 维护者注：修改 `bazi-roundtable/` 下的文件后需重新打包并提交此 zip，保持与源文件同步。
+> 维护者注：CI（`.github/workflows/zip.yml`）会在每次 push 时校验此 zip 与 `bazi-roundtable/` 源文件一致，不一致则构建失败；打 `v*` tag 时自动构建 zip 并附到 GitHub Release。本地重打包：用仓库根目录下 Python 一行脚本或任何保持正斜杠路径的工具（Windows PowerShell 5.1 的 `Compress-Archive` 会写入反斜杠路径，勿用）。
+
+### 排盘脚本（推荐）
+
+盘面准确是一切断语的地基。若只有出生日期时间而无四柱，skill 会调用确定性排盘脚本而非让模型心算节气与日柱：
+
+```bash
+pip install lunar-python
+python bazi-roundtable/scripts/paipan.py 1990-03-15 10:30 男     # 排盘+大运+换节警告
+python bazi-roundtable/scripts/paipan.py --years 2026 2045       # 流年干支
+python bazi-roundtable/scripts/paipan.py --selftest              # 自检
+```
+
+claude.ai 等无法运行脚本的环境下，skill 会要求你提供可信排盘工具的完整结果。
 
 ## 使用
 
@@ -73,16 +86,25 @@ cp -r bazi-roundtable your-project/.claude/skills/
 
 ```
 bazi-roundtable/
-├── SKILL.md              # 流程骨架、角色简表、纪律清单、输出规范
-└── references/
-    ├── discipline.md     # 反倒推纪律、记分规则、真实版话术库、观众框架
-    ├── mangpai.md        # 盲派：做功、宾主、作用优先级、取象
-    ├── geju.md           # 格局派：成格破格、用神清浊、十神生克
-    ├── tiaohou.md        # 调候派：十干十二月调候用神表、寒暖取象
-    └── minguo.md         # 民国派：韦千里式批命体例、报数规则
+├── SKILL.md              # 流程骨架、角色简表、纪律清单、输出规范、盘面事实层规则
+├── scripts/
+│   └── paipan.py         # 确定性排盘：四柱/藏干/十神/大运/换节警告/流年干支
+├── references/
+│   ├── discipline.md     # 反倒推纪律、记分规则、真实版话术库、观众框架
+│   ├── disputes.md       # 争议矩阵：九大争议 × 四派互斥立场（交叉 review 弹药库）
+│   ├── ganzhi-years.md   # 流年干支速查表 1940–2060（禁止心算年份干支）
+│   ├── archive.md        # 跨会话档案：积分/悬案/概率校准的持久化格式
+│   ├── mangpai.md        # 盲派：做功、宾主、作用优先级、取象
+│   ├── geju.md           # 格局派：成格破格、用神清浊、十神生克
+│   ├── tiaohou.md        # 调候派：十干十二月调候用神表（附版本声明）、寒暖取象
+│   └── minguo.md         # 民国派：韦千里式批命体例、报数规则
+└── evals/
+    └── evals.json        # 验收测试用例（不随 zip 分发，配合 skill-creator 运行）
 ```
 
-每个流派文件末尾附**争议点立场表**（辰土算不算根、合绊损耗几成、虚透之火如何断……），同一争议各派立场互斥——这是圆桌上真实冲突的燃料。
+**争议矩阵**（disputes.md）收录九大争议（辰土算不算根、合绊损耗几成、虚透之火如何断……），同一争议四派立场互斥——这是圆桌上真实冲突的燃料。
+
+**跨会话档案**：结账复盘与前瞻预判后，主持人把积分表、悬案清单、概率校准账本写入档案（有文件系统时存 `bazi-archives/`，claude.ai 上输出档案块由你保存）——几个月后拿实况回来对账，赌注还在。
 
 ## 边界
 

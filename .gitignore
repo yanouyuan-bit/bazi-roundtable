@@ -1,1 +1,5 @@
 # 无需忽略的构建产物；bazi-roundtable.zip 有意提交，供用户直接下载上传
+
+# 运行期生成的命盘档案（用户数据，不入库）
+bazi-archives/
+__pycache__/
